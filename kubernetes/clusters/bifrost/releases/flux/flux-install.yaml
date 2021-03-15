@@ -181,7 +181,7 @@ spec:
         # HTTP basic auth credentials can be supplied using environment variables:
         # https://$(GIT_AUTHUSER):$(GIT_AUTHKEY)@github.com/user/repository.git
         - --git-url=git@github.com:tfrigini/fluxMigration
-        - --git-branch=master
+        - --git-branch=main
         - --git-path=kubernetes/clusters/bifrost
         - --git-label=flux
         - --git-user=tfrigini

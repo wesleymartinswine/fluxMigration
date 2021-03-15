@@ -7,6 +7,7 @@ fluxctl install \
 --git-email=${GHUSER}@users.noreply.github.com \
 --git-url=git@github.com:${GHUSER}/fluxMigration \
 --git-path=namespaces,workloads \
+--git-branch=main \
 --namespace=flux
 
 
@@ -15,6 +16,7 @@ fluxctl install \
 --git-email=${GHUSER}@users.noreply.github.com \
 --git-url=git@github.com:${GHUSER}/fluxMigration \
 --git-path=kubernetes/clusters/hmg-dev \
+--git-branch=main \
 --namespace=flux
 
 

@@ -1,0 +1,7 @@
+# exclude all
+#/*
+# include deploy dir
+#!/deploy
+# exclude files from deploy dir
+#/deploy/**/eksctl.yaml
+#/deploy/**/charts

@@ -4,5 +4,7 @@ metadata:
   name: podinfo
   namespace: app
 spec:
-  image: docker.io/beatrizafonso/podinfo:5.0.0
-  interval: 5m0s
+  chart:
+    repository: https://stefanprodan.github.io/podinfo
+    name: podinfo
+    version: 3.2.0

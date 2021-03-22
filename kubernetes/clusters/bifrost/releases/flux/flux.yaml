@@ -274,24 +274,24 @@ spec:
       port: 11211
   selector:
     name: memcached
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: podinfo-image
-  namespace: app
-  annotations:
-    fluxcd.io/automated: "true"
-    fluxcd.io/tag.app: semver:^5.0
-  selector:
-    matchLabels:
-      app: podinfo
-spec:
-  template:
-    metadata:
-      labels:
-        app: podinfo
-    spec:
-      containers:
-      - name: app
-        image: ghcr.io/stefanprodan/podinfo:3.2.0
+# ---
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: podinfo-4
+#   namespace: app
+#   annotations:
+#     fluxcd.io/automated: "true"
+#     fluxcd.io/tag.app: semver:^5.0
+#   selector:
+#     matchLabels:
+#       app: podinfo
+# spec:
+#   template:
+#     metadata:
+#       labels:
+#         app: podinfo
+#     spec:
+#       containers:
+#       - name: app
+#         image: ghcr.io/stefanprodan/podinfo:3.2.0

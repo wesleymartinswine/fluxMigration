@@ -275,31 +275,23 @@ spec:
   selector:
     name: memcached
 ---
-# apiVersion: apps/v1
-# kind: Deployment
-# metadata:
-#   name: podinfo
-#   namespace: app
-#   annotations:
-#     fluxcd.io/tag.redis: semver:^5.0
-#     fluxcd.io/automated: "true"
-# spec:
-#   replicas: 1
-#   selector:
-#     matchLabels:
-#       name: podinfo
-#   strategy:
-#     type: Recreate
-#   template:
-#     metadata:
-#       labels:
-#         name: podinfo
-#     spec:
-#       containers:
-#       - name: podinfo
-#         image: docker.io/beatrizafonso/podinfo:5.0.0
-#         imagePullPolicy: IfNotPresent
-#         resources:
-#           requests:
-#             cpu: 50m
-#             memory: 64Mi
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: podinfo-image
+  namespace: app
+  annotations:
+    fluxcd.io/automated: "true"
+    fluxcd.io/tag.app: semver:^5.0
+  selector:
+    matchLabels:
+      app: podinfo
+spec:
+  template:
+    metadata:
+      labels:
+        app: podinfo
+    spec:
+      containers:
+      - name: app
+        image: ghcr.io/stefanprodan/podinfo:5.0.0

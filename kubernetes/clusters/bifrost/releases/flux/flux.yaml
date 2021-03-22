@@ -294,4 +294,4 @@ spec:
     spec:
       containers:
       - name: app
-        image: ghcr.io/stefanprodan/podinfo:5.0.0
+        image: ghcr.io/stefanprodan/podinfo:3.2.0

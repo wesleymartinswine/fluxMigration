@@ -274,24 +274,3 @@ spec:
       port: 11211
   selector:
     name: memcached
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: redis
-  namespace: app
-  annotations:
-    fluxcd.io/automated: "true"
-    fluxcd.io/tag.app: semver:^5.0
-  selector:
-    matchLabels:
-      app: redis
-spec:
-  template:
-    metadata:
-      labels:
-        app: redis
-    spec:
-      containers:
-      - name: app
-        image: ghcr.io/beatrizafonso/redis:latest

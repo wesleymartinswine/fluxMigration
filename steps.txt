@@ -1,0 +1,92 @@
+export GHUSER="tfrigini"
+
+kubectl create ns flux
+
+fluxctl install \
+--git-user=${GHUSER} \
+--git-email=${GHUSER}@users.noreply.github.com \
+--git-url=git@github.com:${GHUSER}/fluxMigration \
+--git-path=namespaces,workloads \
+--git-branch=main \
+--namespace=flux
+
+
+fluxctl install \
+--git-user=${GHUSER} \
+--git-email=${GHUSER}@users.noreply.github.com \
+--git-url=git@github.com:${GHUSER}/fluxMigration \
+--git-path=kubernetes/clusters/hmg-dev \
+--git-branch=main \
+--namespace=flux
+
+
+kubectl -n flux rollout status deployment/flux
+
+fluxctl identity --k8s-fwd-ns flux
+
+install flux v2:
+
+flux bootstrap github \
+--owner=<YOUR_USER> \
+--repository=<REPO_NAME> \
+--personal=true \ ## no caso de repo pessoal e publico
+--private=false \ ## no caso de repo pessoal e publico
+--path=path/to/cluster \
+
+# O flux 2 será instalado e após isso deve realizar a migração 
+# gradual do helm-operator para o helm-controller através dos 
+# arquivos
+exemplos:
+
+
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  name: podinfo-4
+  namespace: app
+  annotations:
+    fluxcd.io/automated: "true"
+    fluxcd.io/locked: "true"
+spec:
+  chart:
+    repository: https://stefanprodan.github.io/podinfo
+    name: podinfo
+    version: 3.2.0 
+
+---
+
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: podinfo-2
+  namespace: app
+spec:
+  # The interval at which to reconcile the Helm release
+  interval: 2m
+  chart:
+    spec:
+      # The name of the chart as made available by the HelmRepository
+      # (without any aliases)
+      chart: podinfo
+      # A fixed SemVer, or any SemVer range
+      # (i.e. >=4.0.0 <5.0.0)
+      version: 3.2.0
+      # The reference to the HelmRepository
+      sourceRef:
+        kind: HelmRepository
+        name: podinfo-h3
+        # Optional, defaults to the namespace of the HelmRelease
+        namespace: default
+
+# Após isso deve realizar a migração da automação de image
+
+- verificar pre-requisitos:
+
+flux check --components-extra=image-reflector-controller,image-automation-controller
+
+- migrando cada manifesto:
+
+flux create image repository podinfo-image \
+    --image ghcr.io/beatrizafonso/podinfo \
+    --interval 1m \
+    --export > ./kubernetes/clusters/bifrost/releases/automation/podinfo-image.yaml

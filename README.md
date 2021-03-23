@@ -1,3 +1,4 @@
 # Flux MIgration
 
-Repository to test flux migration from Flux to Flux 2
+Repository to test flux migration from FluxV1 to FluxV2
+

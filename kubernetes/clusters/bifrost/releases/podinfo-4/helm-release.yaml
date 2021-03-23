@@ -5,7 +5,6 @@ metadata:
   namespace: app
   annotations:
     fluxcd.io/automated: "true"
-    fluxcd.io/locked: "true"
 spec:
   chart:
     repository: https://stefanprodan.github.io/podinfo

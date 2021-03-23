@@ -33,6 +33,21 @@ flux bootstrap github \
 --private=false \ ## no caso de repo pessoal e publico
 --path=path/to/cluster \
 
+# realizar o deployment de uma aplicação podinfo (por exemplo)
+flux create source git podinfo \
+  --url=https://github.com/stefanprodan/podinfo \
+  --branch=master \
+  --interval=30s \
+  --export > ./kubernetes/clusters/bifrost/releases/podinfo-4/podinfo-source.yaml
+
+flux create kustomization podinfo \
+  --source=podinfo \
+  --path="./kustomize" \
+  --prune=true \
+  --validation=client \
+  --interval=1m \
+  --export > ./kubernetes/clusters/bifrost/releases/podinfo-4/podinfo-kustomization.yaml
+
 # O flux 2 será instalado e após isso deve realizar a migração 
 # gradual do helm-operator para o helm-controller através dos 
 # arquivos
@@ -90,3 +105,11 @@ flux create image repository podinfo-image \
     --image ghcr.io/beatrizafonso/podinfo \
     --interval 1m \
     --export > ./kubernetes/clusters/bifrost/releases/automation/podinfo-image.yaml
+
+Esse comando vai criar um manifesto no caminho especificado;
+Após isso commitar mudanças e sincronizar o flux e checar se está funcionando:
+
+flux reconcile kustomization --with-source flux-system
+
+
+

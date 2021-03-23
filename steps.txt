@@ -25,13 +25,16 @@ kubectl -n flux rollout status deployment/flux
 fluxctl identity --k8s-fwd-ns flux
 
 install flux v2:
+# com componentes extras para automação de imagem!
 
 flux bootstrap github \
---owner=<YOUR_USER> \
---repository=<REPO_NAME> \
---personal=true \ ## no caso de repo pessoal e publico
---private=false \ ## no caso de repo pessoal e publico
---path=path/to/cluster \
+  --components-extra=image-reflector-controller,image-automation-controller \
+  --owner=$GITHUB_USER \
+  --repository=flux-image-updates \
+  --branch=main \
+  --path=clusters/my-cluster \
+  --token-auth \
+  --personal
 
 # realizar o deployment de uma aplicação podinfo (por exemplo)
 flux create source git podinfo \
@@ -47,6 +50,20 @@ flux create kustomization podinfo \
   --validation=client \
   --interval=1m \
   --export > ./kubernetes/clusters/bifrost/releases/podinfo-4/podinfo-kustomization.yaml
+
+# install KUTOMIZE CLI 
+curl --silent --location --remote-name \
+ "https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize/v3.2.3/kustomize_kustomize.v3.2.3_linux_amd64" && \
+ chmod a+x kustomize_kustomize.v3.2.3_linux_amd64 && \
+ sudo mv kustomize_kustomize.v3.2.3_linux_amd64 /usr/local/bin/kustomize
+
+# gerar kutomization.yaml 
+kustomize create --autodetect --recursive
+
+# depois disso é possivel rodar o seguinte comando para sincronizar o flux:
+
+flux reconcile kustomization flux-system --with-source
+
 
 # O flux 2 será instalado e após isso deve realizar a migração 
 # gradual do helm-operator para o helm-controller através dos 

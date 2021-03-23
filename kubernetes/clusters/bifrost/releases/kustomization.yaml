@@ -3,7 +3,6 @@ kind: Kustomization
 resources:
 - .sourceignore
 - automation/podinfo-image.yaml
-- flux/flux.yaml
 - flux-system
 - namespaces/app.yaml
 - namespaces/flux.yaml
@@ -11,6 +10,7 @@ resources:
 - podinfo-2/helm-release.yaml
 - podinfo-2/podinfo-kustomization.yaml
 - podinfo-2/podinfo-source.yaml
+- podinfo-2/podinfo-registry.yaml
 - podinfo-3/helm-release.yaml
 - podinfo-4/helm-release.yaml
 - prometheus/helm-release.yaml

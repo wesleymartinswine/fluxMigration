@@ -6,8 +6,21 @@ metadata:
   namespace: flux-system
 spec:
   imageRepositoryRef:
-    name: podinfo
+    name: podinfo-image
+  filterTags:
+    pattern: '^dev-v(?P<version>.*)'
+    extract: '$version'
   policy:
     semver:
-      range: 5.0.x
+      range: '^1.0'
 
+
+# spec:
+#   imageRepositoryRef:
+#     name: podinfo-image
+#   filterTags:
+#     pattern: '^dev-v(?P<version>.*)'
+#     extract: '$version'
+#   policy:
+#     semver:
+#       range: '^1.0'

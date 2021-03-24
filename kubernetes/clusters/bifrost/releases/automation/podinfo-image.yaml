@@ -5,6 +5,6 @@ metadata:
   name: podinfo-image
   namespace: flux-system
 spec:
-  image: ghcr.io/beatrizafonso/podinfo
+  image: ghcr.io/stefanprodan/podinfo
   interval: 1m0s
 

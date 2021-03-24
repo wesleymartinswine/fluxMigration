@@ -10,3 +10,6 @@ spec:
     repository: https://stefanprodan.github.io/podinfo
     name: podinfo
     version: 3.2.0 
+  # containers:
+  # - name: podinfod
+  #   image: ghcr.io/stefanprodan/podinfo:5.0.0 # {"$imagepolicy": "flux-system:podinfo"}

@@ -7,9 +7,6 @@ metadata:
 spec:
   imageRepositoryRef:
     name: podinfo-image
-  filterTags:
-    pattern: '^dev-v(?P<version>.*)'
-    extract: '$version'
   policy:
     semver:
       range: '^1.0'

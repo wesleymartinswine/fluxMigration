@@ -3,6 +3,7 @@ kind: Kustomization
 resources:
 - .sourceignore
 - automation/podinfo-image.yaml
+- automation/podinfo-policy.yaml
 - flux-system
 - namespaces/app.yaml
 - namespaces/flux.yaml

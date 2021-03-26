@@ -224,8 +224,15 @@ flux check --components-extra=image-reflector-controller,image-automation-contro
 
 [Neste](https://toolkit.fluxcd.io/guides/flux-v1-automation-migration/#making-an-automation-object) link explica como criar esse objeto.
 
-OBS: nao consegui criar um objeto ImageUpdateAutomation -> ainda nao existe as flags que eles disponibilizaram no comando,
-acredito que seja porque essa parte ainda (de automação de imagem) ainda está em construção.
+flux create image update flux-system \
+    --git-repo-ref=flux-system \
+    --git-repo-path="./kubernetes/clusters/bifrost/releases/automation" \
+    --checkout-branch=main \
+    --push-branch=master \
+    --author-name=fluxcdbot \
+    --author-email=fluxcdbot@users.noreply.github.com \
+    --commit-template="{{range .Updated.Images}}{{println .}}{{end}}" \
+    --export > ./Documentos/github/beatrizafonso/fluxMigration/kubernetes/clusters/bifrost/releases/automation/my-app-auto.yaml
 
 ### migrando cada manifesto:
 
@@ -243,7 +250,7 @@ Agora existe um objeto separado para isso: imagePolicy. O seguinte comando cria 
 flux create image repository podinfo \
 --image=ghcr.io/stefanprodan/podinfo \
 --interval=1m \
---export > ./kubernetes/clusters/bifrost/releases/automation/podinfo-registry.yaml
+--export > ./Documentos/github/beatrizafonso/fluxMigration/kubernetes/clusters/bifrost/releases/automation/podinfo-registry.yaml
 ```
 Esse comando vai criar um manifesto no caminho especificado.
 

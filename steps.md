@@ -78,7 +78,7 @@ Obs: É mais indicado criar um kustomization para cada aplicação, para meios d
 
 O flux 2 será instalado e após isso deve realizar a migração gradual do helm-operator para o helm-controller através dos arquivos
 
-exemplos:
+exemplo da configuração anterior:
 
 
 ```
@@ -96,8 +96,11 @@ spec:
     name: podinfo
     version: 3.2.0 
 
----
+```
 
+No helm controller, você tem, além do helmRelease, o HelmRepository
+
+```
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
@@ -120,7 +123,91 @@ spec:
         name: podinfo-h3
         # Optional, defaults to the namespace of the HelmRelease
         namespace: default
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: my-repository-creds
+  namespace: default
+data:
+  # HTTP/S basic auth credentials
+  username: <base64 encoded username>
+  password: <base64 encoded password>
+  # TLS credentials (certFile and keyFile, and/or caCert)
+  certFile: <base64 encoded certificate>
+  keyFile: <base64 encoded key>
+  caCert: <base64 encoded CA certificate>
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: HelmRepository
+metadata:
+  name: my-repository
+  namespace: default
+spec:
+  # ...omitted for brevity
+  secretRef:
+    name: my-repository-creds
 ```
+No Helm-operator o repositório Git era configurado da seguinte maneira:
+
+```
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  name: my-release
+  namespace: default
+spec:
+  chart:
+    # The URL of the Git repository
+    git: https://example.com/org/repo
+    # The Git branch (or other Git reference)
+    ref: master
+    # The path of the chart relative to the repository root
+    path: ./charts/my-chart
+```
+Agora existe um recurso especial para isso: GitRepository
+
+```
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: GitRepository
+metadata:
+  name: my-repository
+  namespace: default
+spec:
+  # The interval at which to check the upstream for updates
+  interval: 10m
+  # The repository URL, can be a HTTP/S or SSH address
+  url: https://example.com/org/repo
+  # The Git reference to checkout and monitor for changes
+  # (defaults to master)
+  # For all available options, see:
+  # https://toolkit.fluxcd.io/components/source/api/#source.toolkit.fluxcd.io/v1beta1.GitRepositoryRef
+  ref:
+    branch: master
+---
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: my-release
+  namespace: default
+spec:
+  # The interval at which to reconcile the Helm release
+  interval: 10m
+  chart:
+    spec:
+      # The path of the chart relative to the repository root
+      chart: ./charts/my-chart
+      # The reference to the GitRepository
+      sourceRef:
+        kind: GitRepository
+        name: my-repository
+        # Optional, defaults to the namespace of the HelmRelease
+        namespace: default
+```
+
 
 ## Migração da automação de image
 
@@ -169,7 +256,9 @@ flux create image policy my-app-policy \
     --semver '^5.0' \
     --export > ./$AUTO_PATH/my-app-policy.yaml
 ```
+verificar:
 
+`flux get image policy flux-system`
 
 ### Troubleshooting
 - Caso algo não funcione, por esse comando vc olha os logs:

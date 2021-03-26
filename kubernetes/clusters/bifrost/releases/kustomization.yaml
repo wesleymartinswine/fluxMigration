@@ -9,9 +9,6 @@ resources:
 - namespaces/flux.yaml
 - namespaces/monitoring.yaml
 - podinfo-2/helm-release.yaml
-- podinfo-2/podinfo-kustomization.yaml
-- podinfo-2/podinfo-source.yaml
-- podinfo-2/podinfo-registry.yaml
 - podinfo-3/helm-release.yaml
 - podinfo-4/helm-release.yaml
 - prometheus/helm-release.yaml

@@ -16,7 +16,7 @@ spec:
     messageTemplate: '{{range .Updated.Images}}{{println .}}{{end}}'
   interval: 1m0s
   push:
-    branch: master
+    branch: main
   update:
-    path: ./releases
+    path: .kubernetes/clusters/bifrost/releases/Automation
     strategy: Setters

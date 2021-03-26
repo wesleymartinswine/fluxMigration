@@ -14,3 +14,4 @@ resources:
 - podinfo-3/helm-release.yaml
 - podinfo-4/helm-release.yaml
 - prometheus/helm-release.yaml
+- redis/helm-release.yaml

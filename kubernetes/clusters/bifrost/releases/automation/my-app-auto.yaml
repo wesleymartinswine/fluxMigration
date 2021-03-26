@@ -17,5 +17,5 @@ spec:
   push:
     branch: master
   update:
-    path: ./kubernetes/clusters/bifrost/releases/automation
+    path: ./kubernetes/clusters/bifrost/releases
     strategy: Setters

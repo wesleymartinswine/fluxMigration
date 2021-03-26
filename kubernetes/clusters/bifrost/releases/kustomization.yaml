@@ -9,6 +9,7 @@ resources:
 - namespaces/app.yaml
 - namespaces/flux.yaml
 - namespaces/monitoring.yaml
+- notification/release.yaml
 - podinfo-2/helm-release.yaml
 - podinfo-3/helm-release.yaml
 - podinfo-4/helm-release.yaml

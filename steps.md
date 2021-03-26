@@ -215,6 +215,11 @@ spec:
 
 flux check --components-extra=image-reflector-controller,image-automation-controller
 
+- image-reflector-controller: reponsável por ver qual tag é a mais recente;
+- image-automation-controller: reponsável por impor as policies (políticas de imagem)
+- Esses dois controllers não são instalados por default, devem ser instalados junto com o bootstrap,
+
+
 ### Criando um objeto de automação:
 
 [Neste](https://toolkit.fluxcd.io/guides/flux-v1-automation-migration/#making-an-automation-object) link explica como criar esse objeto.
@@ -235,10 +240,10 @@ Antes a automação de imagem era dada por annotations no deploy da aplicação:
 Agora existe um objeto separado para isso: imagePolicy. O seguinte comando cria o seu manifesto no caminho especificado:
 
 ```
-flux create image repository podinfo-image \
-    --image ghcr.io/beatrizafonso/podinfo \
-    --interval 1m \
-    --export > ./kubernetes/clusters/bifrost/releases/automation/podinfo-image.yaml
+flux create image repository podinfo \
+--image=ghcr.io/stefanprodan/podinfo \
+--interval=1m \
+--export > ./kubernetes/clusters/bifrost/releases/automation/podinfo-registry.yaml
 ```
 Esse comando vai criar um manifesto no caminho especificado.
 

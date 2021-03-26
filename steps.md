@@ -302,11 +302,11 @@ spec:
 apiVersion: notification.toolkit.fluxcd.io/v1beta1
 kind: Alert
 metadata:
-  name: notification
+  name: discord
   namespace: flux-system
 spec:
   providerRef:
-    name: slack
+    name: discord
   eventSeverity: info
   eventSources:
     - kind: GitRepository

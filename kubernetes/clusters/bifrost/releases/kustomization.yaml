@@ -3,7 +3,8 @@ kind: Kustomization
 resources:
 - .sourceignore
 - automation/my-app-auto.yaml
-- automation/podinfo-registry.yaml
+- automation/redis-registry.yaml
+- automation/redis-policy.yaml
 - flux-system
 - namespaces/app.yaml
 - namespaces/flux.yaml

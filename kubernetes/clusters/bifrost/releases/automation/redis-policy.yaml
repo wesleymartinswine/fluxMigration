@@ -9,5 +9,5 @@ spec:
     name: redis-image
   policy:
     semver:
-      range: 5.0.x
+      range: 1.x
 

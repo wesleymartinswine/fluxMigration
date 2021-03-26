@@ -6,8 +6,9 @@ metadata:
 spec:
   type: discord
   channel: general
+  username: notifications
   secretRef:
-    name: https://discordapp.com/api/webhooks/825038165424996362/vwbJiy4ckG9_2aTkG_lQ3-xCEo0wTHzo7c2lWfGEwkhblGaSWpvlJNef-aUC-wc7_7EG
+    name: slack-url
 ---
 apiVersion: notification.toolkit.fluxcd.io/v1beta1
 kind: Alert

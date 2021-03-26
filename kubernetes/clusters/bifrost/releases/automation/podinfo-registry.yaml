@@ -5,6 +5,6 @@ metadata:
   name: redis-image
   namespace: flux-system
 spec:
-  image: ghcr.io/beatrizafonso/podinfo
+  image: ghcr.io/beatrizafonso/redis
   interval: 5m0s
 

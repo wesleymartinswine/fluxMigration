@@ -13,7 +13,7 @@ spec:
     authorEmail: fluxcdbot@users.noreply.github.com
     authorName: fluxcdbot
     messageTemplate: '{{range .Updated.Images}}{{println .}}{{end}}'
-  interval: 1m0s
+  interval: 1m0s   
   push:
     branch: master
   update:

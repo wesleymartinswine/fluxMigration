@@ -247,8 +247,8 @@ Antes a automação de imagem era dada por annotations no deploy da aplicação:
 Agora existe um objeto separado para isso: imagePolicy. O seguinte comando cria o seu manifesto no caminho especificado:
 
 ```
-flux create image repository podinfo \
---image=ghcr.io/stefanprodan/podinfo \
+flux create image repository redis \
+--image=ghcr.io/beatrizafonso/redis \
 --interval=1m \
 --export > ./Documentos/github/beatrizafonso/fluxMigration/kubernetes/clusters/bifrost/releases/automation/podinfo-registry.yaml
 ```
@@ -276,3 +276,41 @@ verificar:
 - Caso algo não funcione, por esse comando vc olha os logs:
 
 `kubectl logs -n flux-system deploy/image-automation-controller`
+
+
+## Notification-Controller
+
+-criar um segrego com o webhook do seu canal:
+
+`kubectl -n flux-system create secret generic slack-url \
+--from-literal=address=https://discordapp.com/api/webhooks/825038165424996362/vwbJiy4ckG9_2aTkG_lQ3-xCEo0wTHzo7c2lWfGEwkhblGaSWpvlJNef-aUC-wc7_7EG`
+
+- Criar um provedor e o alerta:
+
+```
+apiVersion: notification.toolkit.fluxcd.io/v1beta1
+kind: Provider
+metadata:
+  name: discord
+  namespace: flux-system
+spec:
+  type: discord
+  channel: general
+  secretRef:
+    name: https://discordapp.com/api/webhooks/825038165424996362/vwbJiy4ckG9_2aTkG_lQ3-xCEo0wTHzo7c2lWfGEwkhblGaSWpvlJNef-aUC-wc7_7EG
+---
+apiVersion: notification.toolkit.fluxcd.io/v1beta1
+kind: Alert
+metadata:
+  name: notification
+  namespace: flux-system
+spec:
+  providerRef:
+    name: slack
+  eventSeverity: info
+  eventSources:
+    - kind: GitRepository
+      name: '*'
+    - kind: Kustomization
+      name: '*'
+```

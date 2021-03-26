@@ -6,5 +6,5 @@ metadata:
   namespace: flux-system
 spec:
   image: docker.io/beatrizafonso/redis
-  interval: 5m0s
+  interval: 1m0s
 

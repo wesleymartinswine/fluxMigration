@@ -9,5 +9,5 @@ spec:
     name: redis
   policy:
     semver:
-      range: 1.0.x
+      range: 1.x.x
 

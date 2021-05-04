@@ -61,8 +61,7 @@ spec:
         allowPrivilegeEscalation: false
 
       config: |
-        target: ingester
-
+        
         auth_enabled: false
 
         server:

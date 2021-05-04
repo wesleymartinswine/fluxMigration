@@ -12,7 +12,7 @@ spec:
 
   chart:
     spec:
-      chart: loki-stack
+      chart: loki
       version: "0.28.0"
       sourceRef:
         kind: HelmRepository

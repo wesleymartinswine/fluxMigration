@@ -24,6 +24,7 @@ fluxctl install \
 
 Com componentes extras para automação de imagem!
 
+**repositório pessoal**
 ```
 flux bootstrap github \
   --components-extra=image-reflector-controller,image-automation-controller \
@@ -33,7 +34,37 @@ flux bootstrap github \
   --path=clusters/my-cluster \
   --token-auth \
   --personal
-  ```
+```
+
+**repositório público**
+```
+flux bootstrap github \
+  --components-extra=image-reflector-controller,image-automation-controller \
+  --owner=winecombr \
+  --repository=devops \
+  --branch=master \
+  --path=./kubernetes/clusters/hmg-dev
+```
+
+> `flux get source git -A`
+
+> `flux get kustomization -A`
+
+## kustomizae controller
+
+> `flux reconcile kustomization flux-system --with-source`
+
+> `flux suspend kustomization flux-system`
+
+> `flux resume kustomization flux-system`
+
+ex de kustomization com healhChecks
+
+https://toolkit.fluxcd.io/components/kustomize/kustomization/#health-assessment
+
+
+O kustomization não vai ficar "ready" se não passar por esses healthChecks no `timeout` especificado
+
 
 ### Deploy de uma aplicação
 
@@ -215,11 +246,6 @@ spec:
 
 flux check --components-extra=image-reflector-controller,image-automation-controller
 
-- image-reflector-controller: reponsável por ver qual tag é a mais recente;
-- image-automation-controller: reponsável por impor as policies (políticas de imagem)
-- Esses dois controllers não são instalados por default, devem ser instalados junto com o bootstrap,
-
-
 ### Criando um objeto de automação:
 
 [Neste](https://toolkit.fluxcd.io/guides/flux-v1-automation-migration/#making-an-automation-object) link explica como criar esse objeto.
@@ -234,9 +260,12 @@ flux create image update flux-system \
     --commit-template="{{range .Updated.Images}}{{println .}}{{end}}" \
     --export > ./Documentos/github/beatrizafonso/fluxMigration/kubernetes/clusters/bifrost/releases/automation/my-app-auto.yaml
 
+
 ### migrando cada manifesto:
 
-Antes a automação de imagem era dada por annotations no deploy da aplicação:
+- imageRepository
+
+FLUX 1:
 
 ```
   annotations:
@@ -244,7 +273,7 @@ Antes a automação de imagem era dada por annotations no deploy da aplicação:
     fluxcd.io/tag.app: semver:^5.0
 ```
 
-Agora existe um objeto separado para isso: imagePolicy. O seguinte comando cria o seu manifesto no caminho especificado:
+FLUX 2
 
 ```
 flux create image repository redis \
@@ -252,15 +281,8 @@ flux create image repository redis \
 --interval=1m \
 --export > ./Documentos/github/beatrizafonso/fluxMigration/kubernetes/clusters/bifrost/releases/automation/podinfo-registry.yaml
 ```
-Esse comando vai criar um manifesto no caminho especificado.
 
-Após isso commitar mudanças, sincronizar o flux (com flux reconcile) e checar se está funcionando:
-
-`flux reconcile kustomization --with-source flux-system`
-
-[Aqui](https://toolkit.fluxcd.io/guides/flux-v1-automation-migration/#how-to-use-sortable-image-tags) vc consegue ler melhor sobre os prefixos utilizados no flux1 e o que utilizar no flux2.
-
-O seguinte comando cria os manifestos da image Policy:
+image Policy:
 
 ```
 flux create image policy my-app-policy \
@@ -272,15 +294,9 @@ verificar:
 
 `flux get image policy flux-system`
 
-### Troubleshooting
-- Caso algo não funcione, por esse comando vc olha os logs:
-
-`kubectl logs -n flux-system deploy/image-automation-controller`
-
-
 ## Notification-Controller
 
--criar um segrego com o webhook do seu canal:
+-criar um segredo com o webhook do seu canal:
 
 `kubectl -n flux-system create secret generic slack-url \
 --from-literal=address=https://discordapp.com/api/webhooks/825038165424996362/vwbJiy4ckG9_2aTkG_lQ3-xCEo0wTHzo7c2lWfGEwkhblGaSWpvlJNef-aUC-wc7_7EG`

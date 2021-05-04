@@ -69,10 +69,10 @@ spec:
           # Must be set to 3100
           http_listen_port: 3100
 
-        # distributor:
-        #   ring:
-        #     kvstore:
-        #       store: memberlist
+         distributor:
+           ring:
+             kvstore:
+               store: memberlist
 
         memberlist:
           join_members:
@@ -187,7 +187,7 @@ spec:
         # -- Enable creating PVCs which is required when using boltdb-shipper
         enabled: true
         size: 10Gi
-        storageClass: gp2
+        storageClass: null
 
     # Configuration for the distributor
     distributor:

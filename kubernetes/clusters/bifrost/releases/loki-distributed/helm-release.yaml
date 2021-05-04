@@ -12,7 +12,7 @@ spec:
 
   chart:
     spec:
-      chart: loki
+      chart: loki-distributed
       version: "0.28.0"
       sourceRef:
         kind: HelmRepository
@@ -61,6 +61,8 @@ spec:
         allowPrivilegeEscalation: false
 
       config: |
+        target: ingester
+
         auth_enabled: false
 
         server:
@@ -68,10 +70,10 @@ spec:
           # Must be set to 3100
           http_listen_port: 3100
 
-        distributor:
-          ring:
-            kvstore:
-              store: memberlist
+        # distributor:
+        #   ring:
+        #     kvstore:
+        #       store: memberlist
 
         memberlist:
           join_members:

@@ -19,13 +19,7 @@ spec:
         namespace: flux-system
       interval: 1m
 
-  values:
-
-    secrets:
-      loki-distributed-basic-auth:
-        username: BASIC_AUTH_USERNAME
-        password: BASIC_AUTH_PASSWORD
-
+  values: 
     image:
       repository: grafana/promtail
       tag: 2.0.0
@@ -49,7 +43,7 @@ spec:
 
     config:
       client:
-        url: http://gateway.loki.wine.com.br/loki/api/v1/push
+        url: ""
         tenant_id: "hmg-dev"
 
         # Maximum wait period before sending batch
@@ -70,10 +64,6 @@ spec:
 
         # The labels to add to any time series or alerts when communicating with loki
         external_labels: {}
-
-        basic_auth:
-          username: BASIC_AUTH_USERNAME
-          password: BASIC_AUTH_PASSWORD
 
       server:
         http_listen_port: 3101

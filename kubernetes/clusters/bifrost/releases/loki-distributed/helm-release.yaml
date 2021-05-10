@@ -298,17 +298,17 @@ spec:
       # -- Additional CLI args for the gateway
       extraArgs: []
       # -- Environment variables to add to the gateway pods
-      extraEnv:
-        - name: LOKI_USERNAME
-          valueFrom:
-            secretKeyRef:
-              name: loki-credentials
-              key: username
-        - name: LOKI_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: loki-credentials
-              key: password 
+      extraEnv: []
+        # - name: LOKI_USERNAME
+        #   valueFrom:
+        #     secretKeyRef:
+        #       name: loki-credentials
+        #       key: username
+        # - name: LOKI_PASSWORD
+        #   valueFrom:
+        #     secretKeyRef:
+        #       name: loki-credentials
+        #       key: password 
       # -- Environment variables from secrets or configmaps to add to the gateway pods
       extraEnvFrom: []
       # -- Volumes to add to the gateway pods

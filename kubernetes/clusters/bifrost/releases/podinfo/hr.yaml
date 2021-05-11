@@ -17,6 +17,13 @@ spec:
         name: podinfo
         namespace: flux-system
       interval: 1m
+
+  healthChecks:
+    - apiVersion: apps/v1
+      kind: Deployment
+      name: podinfo
+      namespace: podinfo
+  timeout: 1m
 ---
 apiVersion: source.toolkit.fluxcd.io/v1beta1
 kind: HelmRepository
@@ -26,3 +33,12 @@ metadata:
 spec:
   url: https://stefanprodan.github.io/podinfo
   interval: 1m
+---
+apiVersion: apps/v1
+kind: Deployment
+spec:
+  template:
+    spec:
+      containers:
+      - name: podinfo
+        image: ghcr.io/stefanprodan/podinfo:3.2.0

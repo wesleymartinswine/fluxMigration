@@ -26,5 +26,3 @@ spec:
       name: '*'
     - kind: HelmRelease
       name: '*'
-    - kind: HelmController
-      name: '*'

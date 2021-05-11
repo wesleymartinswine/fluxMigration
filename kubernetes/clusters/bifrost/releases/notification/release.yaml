@@ -6,7 +6,6 @@ metadata:
 spec:
   type: discord
   channel: general
-  username: notifications
   secretRef:
     name: slack-url
 ---
@@ -20,10 +19,11 @@ spec:
     name: discord
   eventSeverity: info
   eventSources:
-    - kind: GitRepository
-      name: '*'
     - kind: Kustomization
       name: '*'
     - kind: HelmRelease
       name: '*'
       namespace: app
+    - kind: Kustomization
+      name: podinfo
+      namespace: podinfo

@@ -4,7 +4,7 @@ metadata:
   name: podinfo
   namespace: app
 spec:
-  interval: 5m
+  interval: 4m
   releaseName: podinfo
   targetNamespace: app
 

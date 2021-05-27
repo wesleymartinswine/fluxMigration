@@ -33,9 +33,9 @@
     # Settings for Discord
     discord:
       enabled: false
-      token: 'ODQ3NTgxMjQzODY3NzkxNDEw.YLAJiw.r67JIE4cxz5UTtffB4LBl3yQxwY'	        # BotKube Bot Token 
-      botid: '847581243867791410'         # BotKube Application Client ID 
-      channel: 'Teste.Alertas'   # Discord Channel id for receiving BotKube alerts 
+      token: ''	        # BotKube Bot Token 
+      botid: ''         # BotKube Application Client ID 
+      channel: ''   # Discord Channel id for receiving BotKube alerts 
       notiftype: short                # Change notification type short/long you want to receive. notiftype is optional and Default notification type is short (if not specified)
 
     # # Settings for ELS

@@ -2,11 +2,11 @@ apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
   name: podinfo-2
-  namespace: app
+  namespace: teste-erro
 spec:
   interval: 4m
   releaseName: podinfo-2
-  targetNamespace: app
+  targetNamespace: teste-erro
 
   chart:
     spec:

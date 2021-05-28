@@ -11,7 +11,7 @@ spec:
   chart:
     spec:
       chart: podinfo
-      version: "5.2.0" #versao certa 3.2.0
+      version: "ERRO" #versao certa 3.2.0
       sourceRef:
         kind: HelmRepository
         name: podinfo

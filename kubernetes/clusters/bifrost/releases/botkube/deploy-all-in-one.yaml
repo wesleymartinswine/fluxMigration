@@ -1,0 +1,327 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: botkube
+---
+# Configmap
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: botkube-configmap
+  namespace: botkube
+  labels:
+    app: botkube
+data:
+  resource_config.yaml: |
+    ## Resources you want to watch
+    resources:
+      - name: v1/pods 
+        namespaces:
+          include:
+            - all
+          ignore:
+            -    
+        events:   
+          - create
+          - delete
+          - error
+      - name: v1/services
+        namespaces:
+          include:
+            - all
+          ignore:
+            -
+        events:
+          - create
+          - delete
+          - error
+      - name: apps/v1/deployments
+        namespaces:
+          include:
+            - all
+          ignore:
+            -
+        events:
+          - create
+          - update
+          - delete
+          - error
+        updateSetting:
+          includeDiff: true
+          fields:
+            - spec.template.spec.containers[*].image
+            - status.availableReplicas
+      - name: apps/v1/statefulsets
+        namespaces:
+          include:
+            - all
+          ignore:
+            -
+        events:
+          - create
+          - update
+          - delete
+          - error
+        updateSetting:
+          includeDiff: true
+          fields:
+            - spec.template.spec.containers[*].image
+            - status.readyReplicas
+      - name: networking.k8s.io/v1/ingresses
+        namespaces:
+          include:
+            - all
+          ignore:
+            -
+        events:
+          - create
+          - delete
+          - error
+      - name: v1/nodes
+        namespaces:
+          include:
+            - all
+          ignore:
+            -
+        events:
+          - create
+          - delete
+          - error
+      - name: v1/namespaces
+        namespaces:
+          include:
+            - all
+          ignore:
+            -
+        events:
+          - create
+          - delete
+          - error
+      - name: v1/persistentvolumes
+        namespaces:
+          include:
+            - all
+          ignore:
+            -
+        events:
+          - create
+          - delete
+          - error
+      - name: v1/persistentvolumeclaims
+        namespaces:
+          include:
+            - all
+          ignore:
+            -
+        events:
+          - create
+          - delete
+          - error
+      - name: v1/configmaps
+        namespaces:
+          include:
+            - all
+          ignore:
+            -
+        events:
+          - create
+          - delete
+          - error
+      - name: apps/v1/daemonsets
+        namespaces:
+          include:
+            - all
+          ignore:
+            -
+        events:
+          - create
+          - update
+          - delete
+          - error
+        updateSetting:
+          includeDiff: true
+          fields:
+            - spec.template.spec.containers[*].image
+            - status.numberReady
+      - name: batch/v1/jobs
+        namespaces:
+          include:
+            - all
+          ignore:
+            -
+        events:
+          - create
+          - update
+          - delete
+          - error
+        updateSetting:
+          includeDiff: true
+          fields:
+            - spec.template.spec.containers[*].image
+            - status.conditions[*].type
+      - name: rbac.authorization.k8s.io/v1/roles
+        namespaces:
+          include:
+            - all
+          ignore:
+            -
+        events:
+          - create
+          - delete
+          - error
+      - name: rbac.authorization.k8s.io/v1/rolebindings
+        namespaces:
+          include:
+            - all
+          ignore:
+            -
+        events:
+          - create
+          - delete
+          - error
+      - name: rbac.authorization.k8s.io/v1/clusterrolebindings
+        namespaces:
+          include:
+            - all
+          ignore:
+            -
+        events:
+          - create
+          - delete
+          - error
+      - name: rbac.authorization.k8s.io/v1/clusterroles
+        namespaces:
+          include:
+            - all
+          ignore:
+            -
+        events:
+          - create
+          - delete
+          - error
+     
+    recommendations: true
+
+    settings:
+      clustername: kind-bifrost
+      kubectl:
+        enabled: true
+        commands:
+          verbs: ["api-resources", "api-versions", "cluster-info", "describe", "diff", "explain", "get", "logs", "top", "auth"]
+          resources: ["deployments", "pods" , "namespaces"]
+        defaultNamespace: botkube
+        restrictAccess: false
+      configwatcher: true
+      upgradeNotifier: true
+---
+# secret
+apiVersion: v1
+kind: Secret
+metadata:
+  name: botkube-communication-secret
+  namespace: botkube
+  labels:
+    app: botkube
+type: Opaque
+stringData:
+  comm_config.yaml: |
+    communications: 
+      discord:
+        enabled: true
+        token: "ODQ3NjE4NDA4ODk1MzQ4NzQ3.YLAsKA.FnrWgAs9b1584uymRbvwb83o9Ng"
+        botid: "847618408895348747"
+        channel: "825034886565462088"
+        notiftype: short
+      webhook:
+        enabled: true
+        url: "https://discord.com/api/webhooks/825038165424996362/vwbJiy4ckG9_2aTkG_lQ3-xCEo0wTHzo7c2lWfGEwkhblGaSWpvlJNef-aUC-wc7_7EG"
+---
+# serviceaccount
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: botkube-sa
+  namespace: botkube
+  labels:
+    app: botkube
+---
+# Source: botkube/templates/clusterrole.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: botkube-clusterrole
+  labels:
+    app: botkube
+rules:
+  - apiGroups: ["*"]
+    resources: ["*"]
+    verbs: ["get", "watch", "list"]
+---
+# clusterrolebinding
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: botkube-clusterrolebinding
+  labels:
+    app: botkube
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: botkube-clusterrole
+subjects:
+- kind: ServiceAccount
+  name: botkube-sa
+  namespace: botkube
+---
+# deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: botkube
+  namespace: botkube
+  labels:
+    component: controller
+    app: botkube
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: controller
+      app: botkube
+  template:
+    metadata:
+      labels:
+        component: controller
+        app: botkube
+    spec:
+      serviceAccountName: botkube-sa
+      containers:
+        - name: botkube
+          image: "infracloudio/botkube:v0.12.1"
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - name: config-volume
+              mountPath: "/config"
+          env:
+            - name: CONFIG_PATH
+              value: "/config/"
+            # set one of the log levels- info, warn, debug, error, fatal, panic
+            - name: LOG_LEVEL
+              value: "info"
+            # set BotKube release version
+            - name: BOTKUBE_VERSION
+              value: v0.12.1
+      volumes:
+        - name: config-volume
+          projected:
+            sources:
+            - configMap:
+                name: botkube-configmap
+            - secret:
+                name: botkube-communication-secret
+      # run as non privileged user
+      securityContext:
+        runAsUser: 101
+        runAsGroup: 101
+---

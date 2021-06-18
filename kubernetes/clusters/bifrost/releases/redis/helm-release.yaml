@@ -1,3 +1,14 @@
+---
+apiVersion: image.toolkit.fluxcd.io/v1alpha1
+kind: ImageRepository
+metadata:
+  name: redis
+  namespace: flux-system
+spec:
+  image: docker.io/beatrizafonso/redis
+  interval: 1m0s
+
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:

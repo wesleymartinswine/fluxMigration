@@ -1,0 +1,64 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: GitRepository
+metadata:
+  name: flux-system
+  namespace: flux-system
+spec:
+  interval: 1m0s
+  ref:
+    branch: main
+  secretRef:
+    name: flux-system
+  url: https://github.com/beatrizafonso/fluxMigration
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta1
+kind: Kustomization
+metadata:
+  name: flux-system
+  namespace: flux-system
+spec:
+  interval: 10m0s
+  path: ./kubernetes/clusters/bifrost/releases
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  validation: client
+
+---
+apiVersion: image.toolkit.fluxcd.io/v1alpha1
+kind: ImageUpdateAutomation
+metadata:
+  name: flux-system
+  namespace: flux-system
+spec:
+  checkout:
+    branch: main
+    gitRepositoryRef:
+      name: flux-system
+  commit:
+    authorEmail: fluxcdbot@users.noreply.github.com
+    authorName: fluxcdbot
+    messageTemplate: '{{range .Updated.Images}}{{println .}}{{end}}'
+  interval: 1m0s   
+  push:
+    branch: main
+  update:
+    path: ./kubernetes/clusters/bifrost/releases
+    strategy: Setters
+---
+apiVersion: image.toolkit.fluxcd.io/v1alpha1
+kind: ImagePolicy
+metadata:
+  name: redis
+  namespace: flux-system
+spec:
+  imageRepositoryRef:
+    name: redis
+  policy:
+    semver:
+      range: 1.x.x
+
+
+

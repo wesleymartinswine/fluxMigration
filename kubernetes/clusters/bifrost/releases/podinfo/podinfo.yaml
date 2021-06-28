@@ -26,3 +26,5 @@ metadata:
 spec:
   url: https://stefanprodan.github.io/podinfo
   interval: 1m
+
+# trigger test
